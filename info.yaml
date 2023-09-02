@@ -30,8 +30,10 @@ documentation:
     ## Descripción General
     El código Verilog proporcionado es para un generador simple de PWM (Modulación por Ancho de Pulso) con un ciclo de trabajo variable. 
     El ciclo de trabajo se controla mediante dos botones: uno para aumentar y otro para disminuir el ciclo de trabajo. El código también incluye lógica para el anti-rebote de los botones.
+    
     ### Señales de Botones
     `increase_duty` y `decrease_duty` son señales que están directamente conectadas a `ui_in[0]` y `ui_in[1]`, respectivamente.
+    
     ### Lógica de Anti-rebote
     El código incluye lógica para el anti-rebote de los botones. Utiliza un contador (`counter_debounce`) para generar una señal de habilitación de reloj lento (`slow_clk_enable`). 
     Este reloj lento se utiliza para muestrear los estados de los botones y eliminar el rebote.
@@ -42,17 +44,6 @@ documentation:
 
     ### Módulo DFF_PWM
     Este es un simple flip-flop D utilizado para el anti-rebote. Muestrea la entrada `D` cuando la señal de habilitación `en` está en alto.
-
-    ## Observaciones
-    1. *Simulación vs FPGA*: El código tiene comentarios que indican que ciertas líneas deben ser comentadas o descomentadas dependiendo de si se está ejecutando una simulación o el código en un FPGA.
-    2. *Señal de Reset*: La señal `rst_n` se declara pero no se utiliza en el código. Normalmente, se utilizaría esta señal para reiniciar los contadores y las variables de estado.
-    3. *Señal de Habilitación*: La señal `ena` también se declara pero no se utiliza. Podría utilizarse para habilitar o deshabilitar la funcionalidad del módulo.
-    4. *E/S Bidireccionales*: Las señales `uio_in`, `uio_out` y `uio_oe` se declaran pero no se utilizan en el código.
-    5. *No hay Cruce de Dominios de Reloj*: El código asume que toda la lógica opera en el mismo dominio de reloj. Si este no es el caso, se deben tomar precauciones adicionales.
-    6. *No hay Inicialización para los Flip-flops*: Los flip-flops D en `DFF_PWM` no están inicializados. Generalmente, es una buena práctica inicializarlos, a menudo con una señal de reinicio.
-    7. *Sintaxis y Estilo*: El código está en su mayoría bien escrito, pero podría beneficiarse de más comentarios que expliquen la funcionalidad de cada bloque.
-    8. *Rango del Ciclo de Trabajo*: El ciclo de trabajo está representado por un número de 4 bits, pero el código solo utiliza el rango de 1 a 9. Podría considerarse utilizar el rango completo para más granularidad.
-    9. *Rangos de Contadores*: El contador para el anti-rebote (`counter_debounce`) tiene 28 bits, lo cual podría ser excesivo dependiendo de la frecuencia de reloj y el tiempo de anti-rebote requerido.
 
 # Instructions on how someone could test your project, include things like what buttons do what and how to set the clock if needed
   how_to_test:  |
