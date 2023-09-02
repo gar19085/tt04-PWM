@@ -28,14 +28,23 @@ documentation:
 # Longer description of how the project works. You can use standard markdown format.
   how_it_works: |
     ## General Description
-    The provided Verilog code is for a simple Pulse Width Modulation (PWM) generator with a variable duty cycle. 
-    The duty cycle is controlled using two buttons: one to increase and another to decrease the duty cycle. 
-    The code also includes logic for button debounce.
-
-    ### PWM Logic
-    The code utilizes a 4-bit counter (`counter_PWM`) to generate a PWM signal. The duty cycle of the PWM signal is controlled 
-    by the `DUTY_CYCLE` variable, which can be increased or decreased using the debounce logic signals (`duty_inc` and `duty_dec`).
+      The project is a simple Pulse Width Modulation (PWM) generator with a variable duty cycle. The duty cycle is controlled 
+      using two buttons: one to increase and another to decrease the duty cycle. The project is designed to operate with a 10 
+      MHz clock as its time base.
     
+    ### Button Signals
+      increase_duty and decrease_duty are signals directly connected to ui_in[0] and ui_in[1], respectively.
+    
+    ### Debounce Logic
+      The code includes debounce logic for the buttons. It uses a counter (counter_debounce) to generate a slow clock enable signal 
+      (slow_clk_enable). This slow clock is used to sample the button states and eliminate debounce.
+    
+    ### PWM Logic
+      The code utilizes a 4-bit counter (counter_PWM) to generate a PWM signal. The duty cycle of the PWM signal is controlled by the 
+      DUTY_CYCLE variable, which can be increased or decreased using the debounce logic signals (duty_inc and duty_dec).
+    
+    ### DFF_PWM Module
+      This is a simple D flip-flop used for debounce. It samples the D input when the en (enable) signal is high.
 
 # Instructions on how someone could test your project, include things like what buttons do what and how to set the clock if needed
   how_to_test:  |
