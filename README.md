@@ -21,10 +21,11 @@ To use this variable duty cycle PWM generator project, follow these steps:
 ### Button Connections:
 
 You should physically connect two buttons to the system. These buttons are used to control the duty cycle of the PWM signal. 
-Connect input pin 0 to one of the buttons. This button is used to increase the duty cycle of the PWM signal. Make sure the button 
-has a pull-down resistor connected to ensure a defined logical level when not pressed. Connect input pin 1 to the other button. 
-This button is used to decrease the duty cycle of the PWM signal. Just like the first button, ensure that this one also has a 
-pull-down resistor connected.
+
+- Connect input pin 0 to one of the buttons. This button is used to increase the duty cycle of the PWM signal. Make sure the button 
+has a pull-down resistor connected to ensure a defined logical level when not pressed.
+- Connect input pin 1 to the other button. This button is used to decrease the duty cycle of the PWM signal. Just like the first button,
+ensure that this one also has a pull-down resistor connected.
 
 ### Oscilloscope Connection:
 
