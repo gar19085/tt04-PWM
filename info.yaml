@@ -5,10 +5,9 @@ project:
 
 # If using an HDL, set wokwi_id as 0 and uncomment and list your source files here. 
 # Source files must be in ./src and you must list each source file separately
-#  source_files:        
-#    - counter.v
-#    - decoder.v
-#  top_module:  "tt_um_example"      # Put the name of your top module here, must start with "tt_um_". Make it unique by including your github username
+  source_files:        
+    - pwm_generator.v
+  top_module:  "tt_um_pwm"      # Put the name of your top module here, must start with "tt_um_". Make it unique by including your github username
 
 # How many tiles your design occupies? A single tile is about 167x108 uM.
   tiles: "1x1"    # Valid values: 1x1, 1x2, 2x2, 4x2 or 8x2
@@ -21,23 +20,49 @@ yaml_version: 4
 #
 # Here is a great example: https://github.com/davidsiaw/tt02-davidsiaw-stackcalc/blob/38c5647f83aad2aec675d566aa3d67b98f0aac81/info.yaml
 documentation: 
-  author:       ""      # Your name
-  title:        ""      # Project title
-  language:     "Wokwi" # other examples include Verilog, Amaranth, VHDL, etc
-  description:  ""      # Short description of what your project does
+  author:       "Rodrigo Garcia"      # Your name
+  title:        "Generador de PWM"      # Project title
+  language:     "Verilog" # other examples include Verilog, Amaranth, VHDL, etc
+  description:  "Es un generador de PWM"      # Short description of what your project does
 
 # Longer description of how the project works. You can use standard markdown format.
   how_it_works: |
-      Explain how your project works
+    ## Descripción General
+    El código Verilog proporcionado es para un generador simple de PWM (Modulación por Ancho de Pulso) con un ciclo de trabajo variable. 
+    El ciclo de trabajo se controla mediante dos botones: uno para aumentar y otro para disminuir el ciclo de trabajo. El código también incluye lógica para el anti-rebote de los botones.
+    ### Señales de Botones
+    `increase_duty` y `decrease_duty` son señales que están directamente conectadas a `ui_in[0]` y `ui_in[1]`, respectivamente.
+    ### Lógica de Anti-rebote
+    El código incluye lógica para el anti-rebote de los botones. Utiliza un contador (`counter_debounce`) para generar una señal de habilitación de reloj lento (`slow_clk_enable`). 
+    Este reloj lento se utiliza para muestrear los estados de los botones y eliminar el rebote.
+    
+    ### Lógica de PWM
+    El código utiliza un contador de 4 bits (`counter_PWM`) para generar una señal PWM. El ciclo de trabajo de la señal PWM está controlado por la variable `DUTY_CYCLE`, 
+    que puede incrementarse o decrementarse mediante las señales de botones anti-rebote (`duty_inc` y `duty_dec`).
+
+    ### Módulo DFF_PWM
+    Este es un simple flip-flop D utilizado para el anti-rebote. Muestrea la entrada `D` cuando la señal de habilitación `en` está en alto.
+
+    ## Observaciones
+    1. *Simulación vs FPGA*: El código tiene comentarios que indican que ciertas líneas deben ser comentadas o descomentadas dependiendo de si se está ejecutando una simulación o el código en un FPGA.
+    2. *Señal de Reset*: La señal `rst_n` se declara pero no se utiliza en el código. Normalmente, se utilizaría esta señal para reiniciar los contadores y las variables de estado.
+    3. *Señal de Habilitación*: La señal `ena` también se declara pero no se utiliza. Podría utilizarse para habilitar o deshabilitar la funcionalidad del módulo.
+    4. *E/S Bidireccionales*: Las señales `uio_in`, `uio_out` y `uio_oe` se declaran pero no se utilizan en el código.
+    5. *No hay Cruce de Dominios de Reloj*: El código asume que toda la lógica opera en el mismo dominio de reloj. Si este no es el caso, se deben tomar precauciones adicionales.
+    6. *No hay Inicialización para los Flip-flops*: Los flip-flops D en `DFF_PWM` no están inicializados. Generalmente, es una buena práctica inicializarlos, a menudo con una señal de reinicio.
+    7. *Sintaxis y Estilo*: El código está en su mayoría bien escrito, pero podría beneficiarse de más comentarios que expliquen la funcionalidad de cada bloque.
+    8. *Rango del Ciclo de Trabajo*: El ciclo de trabajo está representado por un número de 4 bits, pero el código solo utiliza el rango de 1 a 9. Podría considerarse utilizar el rango completo para más granularidad.
+    9. *Rangos de Contadores*: El contador para el anti-rebote (`counter_debounce`) tiene 28 bits, lo cual podría ser excesivo dependiendo de la frecuencia de reloj y el tiempo de anti-rebote requerido.
 
 # Instructions on how someone could test your project, include things like what buttons do what and how to set the clock if needed
   how_to_test:  |
-      Explain how to test your project
+      Conectar los pines 0 y 1 a botones con resistencias pull-down, y conectar un osciloscopio al pin de salida 0.
+      
 
 # A description of what the inputs do (e.g. red button, SPI CLK, SPI MOSI, etc).
   inputs:               
-    - none
-    - none
+    - increase_duty
+    - decrease_duty
     - none
     - none
     - none
@@ -46,14 +71,14 @@ documentation:
     - none
 # A description of what the outputs do (e.g. status LED, SPI MISO, etc)
   outputs:
-    - segment a
-    - segment b
-    - segment c
-    - segment d
-    - segment e
-    - segment f
-    - segment g
-    - dot
+    - out_pwm
+    - none
+    - none
+    - none
+    - none
+    - none
+    - none
+    - none
 # A description of what the bidirectional I/O pins do (e.g. I2C SDA, I2C SCL, etc)
   bidirectional:
     - none
@@ -66,9 +91,9 @@ documentation:
     - none
 
 # The following fields are optional
-  tag:          ""      # comma separated list of tags: test, encryption, experiment, clock, animation, utility, industrial, pwm, fpga, alu, microprocessor, risc, riscv, sensor, signal generator, fft, filter, music, bcd, sound, serial, timer, random number generator, calculator, decoder, counter, puzzle, multiplier, game, oscillator,
-  external_hw:  ""      # Describe any external hardware needed
+  tag:          "signal generator, experiment"      # comma separated list of tags: test, encryption, experiment, clock, animation, utility, industrial, pwm, fpga, alu, microprocessor, risc, riscv, sensor, signal generator, fft, filter, music, bcd, sound, serial, timer, random number generator, calculator, decoder, counter, puzzle, multiplier, game, oscillator,
+  external_hw:  "Dos push buttons y un osciloscopio"      # Describe any external hardware needed
   discord:      ""      # Your discord handle, used for communication and automatically assigning tapeout role after a submission
   doc_link:     ""      # URL to longer form documentation, eg the README.md in your repository
-  clock_hz:     0       # Clock frequency in Hz (if required)
+  clock_hz:     10000000       # Clock frequency in Hz (if required)
   picture:      ""      # relative path to a picture in your repository (must be 512kb or less)
