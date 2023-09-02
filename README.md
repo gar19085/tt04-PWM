@@ -1,36 +1,17 @@
-![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/wokwi_test/badge.svg)
+## Descripción General
+    El código Verilog proporcionado es para un generador simple de PWM (Modulación por Ancho de Pulso) con un ciclo de trabajo variable. 
+    El ciclo de trabajo se controla mediante dos botones: uno para aumentar y otro para disminuir el ciclo de trabajo. El código también incluye lógica para el anti-rebote de los botones.
+    
+    ### Señales de Botones
+    `increase_duty` y `decrease_duty` son señales que están directamente conectadas a `ui_in[0]` y `ui_in[1]`, respectivamente.
+    
+  ### Lógica de Anti-rebote
+    El código incluye lógica para el anti-rebote de los botones. Utiliza un contador (`counter_debounce`) para generar una señal de habilitación de reloj lento (`slow_clk_enable`). 
+    Este reloj lento se utiliza para muestrear los estados de los botones y eliminar el rebote.
+    
+  ### Lógica de PWM
+    El código utiliza un contador de 4 bits (`counter_PWM`) para generar una señal PWM. El ciclo de trabajo de la señal PWM está controlado por la variable `DUTY_CYCLE`, 
+    que puede incrementarse o decrementarse mediante las señales de botones anti-rebote (`duty_inc` y `duty_dec`).
 
-# What is Tiny Tapeout?
-
-TinyTapeout is an educational project that aims to make it easier and cheaper than ever to get your digital designs manufactured on a real chip!
-
-Go to https://tinytapeout.com for instructions!
-
-## How to change the Wokwi project
-
-Edit the [info.yaml](info.yaml) and change the wokwi_id to match your project.
-
-## How to enable the GitHub actions to build the ASIC files
-
-Please see the instructions for:
-
-- [Enabling GitHub Actions](https://tinytapeout.com/faq/#when-i-commit-my-change-the-gds-action-isnt-running)
-- [Enabling GitHub Pages](https://tinytapeout.com/faq/#my-github-action-is-failing-on-the-pages-part)
-
-## How does it work?
-
-When you edit the info.yaml to choose a different ID, the [GitHub Action](.github/workflows/gds.yaml) will fetch the digital netlist of your design from Wokwi.
-
-After that, the action uses the open source ASIC tool called [OpenLane](https://www.zerotoasiccourse.com/terminology/openlane/) to build the files needed to fabricate an ASIC.
-
-## Resources
-
-- [FAQ](https://tinytapeout.com/faq/)
-- [Digital design lessons](https://tinytapeout.com/digital_design/)
-- [Learn how semiconductors work](https://tinytapeout.com/siliwiz/)
-- [Join the community](https://discord.gg/rPK2nSjxy8)
-
-## What next?
-
-- Submit your design to the next shuttle [on the website](https://tinytapeout.com/#submit-your-design), the closing date is 8th September.
-- Share your GDS on Twitter, tag it [#tinytapeout](https://twitter.com/hashtag/tinytapeout?src=hashtag_click) and [link me](https://twitter.com/matthewvenn)!
+  ### Módulo DFF_PWM
+    Este es un simple flip-flop D utilizado para el anti-rebote. Muestrea la entrada `D` cuando la señal de habilitación `en` está en alto.
