@@ -1,3 +1,4 @@
+![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/wokwi_test/badge.svg)
 ## General Description
 This project focuses on creating a Pulse Width Modulation (PWM) generator using the Verilog hardware description language. 
 The main feature of this generator is the ability to vary the duty cycle of the PWM signal, and this adjustment is achieved 
